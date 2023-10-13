@@ -1,0 +1,106 @@
+<div class="d-flex align-items-center">
+  <div class="container h-100">
+    <div class="card" style="border-radius: 15px">
+      <div
+        class="card-body p-5"
+        style="background-color: rgba(73, 113, 90, 0.868); border-radius: 25px"
+      >
+        <h2 class="text-uppercase text-center mb-5">
+          <strong class="text-light">Create an account</strong>
+        </h2>
+
+        <div *ngIf="registerSuccess">
+          <h2>Your register happening</h2>
+        </div>
+
+        <form
+          *ngIf="!registerSuccess"
+          (ngSubmit)="register()"
+          [formGroup]="registrationForm"
+        >
+          <div class="form-outline mb-4">
+            <input
+              type="text"
+              name="username"
+              formControlName="username"
+              class="form-control form-control-lg"
+              placeholder="User Name"
+            />
+            <div
+              *ngIf="
+                this.registrationForm.get('username')?.errors &&
+                this.registrationForm.get('username')?.touched
+              "
+              id="usernameHelpBlock"
+              class="form-text text-light"
+            >
+              *invalid Username
+            </div>
+          </div>
+
+          <div class="form-outline mb-4">
+            <input
+              type="text"
+              name="acno"
+              formControlName="acno"
+              class="form-control form-control-lg"
+              placeholder="Account Number"
+            />
+            <div
+              *ngIf="
+                this.registrationForm.get('acno')?.errors &&
+                this.registrationForm.get('acno')?.touched
+              "
+              id="acnoHelpBlock"
+              class="form-text text-light"
+            >
+              *invalid Account Number
+            </div>
+          </div>
+
+          <div class="form-outline mb-4">
+            <input
+              type="password"
+              name="password"
+              formControlName="password"
+              class="form-control form-control-lg"
+              placeholder="Password"
+            />
+            <div
+              *ngIf="
+                this.registrationForm.get('password')?.errors &&
+                this.registrationForm.get('password')?.touched
+              "
+              id="passwordHelpBlock"
+              class="form-text text-light"
+            >
+              Your password must be 8-20 characters long, contain letters and
+              numbers, and must not contain spaces, special characters, or
+              emoji.
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <button
+              type="submit"
+              class="btn btn-info btn-block btn-lg gradient-custom-4 text-body"
+            >
+              <strong class="text-light">Register</strong>
+            </button>
+          </div>
+
+          <h5>{{ registerError }}</h5>
+
+          <p class="text-center text-muted mt-5 mb-0">
+            <strong class="text-light">Have already an account? </strong>
+            <a class="fw-bold text-body" routerLink="/login">
+              <u>
+                <strong class="text-info">Login here</strong>
+              </u>
+            </a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,318 @@
+<nav class="navbar navbar-expand-sm bg-primary">
+  <div
+    class="container-fluid d-flex justify-content-between align-items-center"
+    style="height: 10vh"
+  >
+    <a class="navbar-brand">
+      <img
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE8iGWHC_WiOWr3AXOuG5sGcoVzBC-56POb8PYVcza7aM16-49EnYtshjjMUw6KFIuiW8&usqp=CAU"
+        alt="Logo"
+        width="30"
+        height="24"
+      />
+      Evara Bank
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDarkDropdown"
+      aria-controls="navbarNavDarkDropdown"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <button
+            class="btn btn-dark dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Services
+          </button>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li>
+              <a
+                class="dropdown-item"
+                data-bs-toggle="offcanvas"
+                href="#offcanvasExample"
+                (click)="getBalance()"
+              >
+                Balance Enquiry
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+              >
+                Fund Transfer
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/transactions"
+                >Transaction History</a
+              >
+            </li>
+            <li><a class="dropdown-item">Remove Account</a></li>
+            <li><a (click)="logout()" class="dropdown-item">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- offcanvas -->
+<div
+  class="offcanvas offcanvas-start"
+  tabindex="-1"
+  id="offcanvasExample"
+  aria-labelledby="offcanvasExampleLabel"
+>
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Balance Enquiry</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <img
+        src="https://i.pinimg.com/originals/a6/ff/a5/a6ffa54c9b06f7030aecd93f011dcb60.gif"
+        alt=""
+        srcset=""
+        style="width: 100%"
+      />
+    </div>
+    <div>
+      <h5>Hey {{ user }}</h5>
+      <h6>Your Current balance is: {{ balance }}</h6>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Fund Transfer</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          class="d-flex flex-column justify-content-center row-gap-3 px-3 pt-4"
+          [formGroup]="fundTransferForm"
+        >
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              name="toAcno"
+              class="form-control"
+              formControlName="toAcno"
+              placeholder="Amount"
+            />
+            <label>Credit Account Number</label>
+            <div
+              *ngIf="
+                this.fundTransferForm.get('toAcno')?.errors &&
+                this.fundTransferForm.get('toAcno')?.touched
+              "
+            >
+              Invalid Account Number
+            </div>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              name="amount"
+              class="form-control"
+              formControlName="amount"
+              placeholder="Amount"
+            />
+            <label>Amount</label>
+            <div
+              *ngIf="
+                this.fundTransferForm.get('amount')?.errors &&
+                this.fundTransferForm.get('amount')?.touched
+              "
+            >
+              Invalid Amount
+            </div>
+          </div>
+          <div class="form-floating">
+            <input
+              type="password"
+              name="frompswd"
+              class="form-control"
+              formControlName="frompswd"
+              placeholder="Password"
+              autocomplete="off"
+            />
+            <label>Password</label>
+          </div>
+          <div
+            *ngIf="
+              this.fundTransferForm.get('frompswd')?.errors &&
+              this.fundTransferForm.get('frompswd')?.touched
+            "
+          >
+            Your password must be 8-20 characters long, contain letters and
+            numbers, and must not contain spaces, special characters, or emoji.
+          </div>
+          <div>
+            {{ transferSuccess }}
+          </div>
+          <div>
+            {{ transferError }}
+          </div>
+          <div class="modal-footer">
+            <button
+              (click)="fundTransferReset()"
+              type="submit"
+              class="btn btn-danger"
+            >
+              Reset
+            </button>
+            <button
+              (click)="fundTransfer()"
+              type="submit"
+              class="btn btn-primary"
+            >
+              Transfer
+            </button>
+            <button
+              data-bs-dismiss="modal"
+              type="submit"
+              class="btn btn-success"
+            >
+              Close
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- main content -->
+
+<main>
+  <div
+    class="d-flex justify-content-evenly align-items-center gap-3 flex-wrap"
+    style="min-height: 70vh; height: min-content"
+  >
+    <div *ngIf="dashboardLogout">
+      <h2>Your logout happening</h2>
+    </div>
+    <div
+      *ngIf="!dashboardLogout"
+      style="width: 40rem"
+      class="d-flex justify-content-center px-3"
+    >
+      <img
+        src="https://payu.in/blog/wp-content/uploads/2019/09/Cover-Enach.gif"
+        alt=""
+        srcset=""
+        style="width: 100%"
+      />
+    </div>
+    <div  *ngIf="!dashboardLogout"
+      style="width: 40rem"
+      class="d-flex flex-column justify-content-center align-items-start px-3"
+    >
+      <h1>Welcome {{ user }}</h1>
+      <p class="fw-bold" style="text-align: justify">
+        Online banking offers customers almost every service traditionally
+        available through a local branch including deposits, transfers, and
+        online bill payments. Virtually every banking institution has some form
+        of online banking you can access through a computer or app.
+      </p>
+      <div class="collapse card" id="collapseExample1">
+        Some placeholder content for the collapse component. This panel is
+        hidden by default but revealed when the user activates the relevant
+        trigger.
+      </div>
+      <button
+        (click)="collapse()"
+        class="btn bg-info text-dark fw-bold"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseExample1"
+      >
+        Read
+        <span *ngIf="!isCollapse">More</span>
+        <span *ngIf="isCollapse">Less</span>
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- footer -->
+
+<footer class="bg-dark text-center text-white">
+  <!-- Grid container -->
+  <div class="container p-4 pb-0">
+    <!-- Section: Social media -->
+    <section class="mb-4">
+      <!-- Facebook -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-facebook-f"></i
+      ></a>
+
+      <!-- Twitter -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-twitter"></i
+      ></a>
+
+      <!-- Google -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-google"></i
+      ></a>
+
+      <!-- Instagram -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-instagram"></i
+      ></a>
+
+      <!-- Linkedin -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-linkedin-in"></i
+      ></a>
+
+      <!-- Github -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-github"></i
+      ></a>
+    </section>
+    <!-- Section: Social media -->
+  </div>
+  <!-- Grid container -->
+
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+    © 2020 Copyright:
+    <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+  </div>
+  <!-- Copyright -->
+</footer>
